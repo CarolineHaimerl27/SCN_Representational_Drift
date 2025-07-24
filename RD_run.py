@@ -71,7 +71,6 @@ def simulate_RD(name, Tdays, Nsim):
     ######### DAY 0 simulation #########
     print('run ', name)
 
-
     RSUM = []
     for _ in range(param['Nsim']):
         # day 0 simulation:
@@ -82,7 +81,7 @@ def simulate_RD(name, Tdays, Nsim):
 
         spikes = np.concatenate(np.concatenate(spikes))
 
-        #### SAVE ACTIVITY ####
+    #### SAVE ACTIVITY ####
     param['ACT'] = RSUM
     with open(path_save +name+'.pk', 'wb') as f:
                 pickle.dump(param, f)
@@ -110,9 +109,6 @@ def simulate_RD(name, Tdays, Nsim):
         return x_interpolated[:T]
 
     param['thresh'] = np.stack([interpolate_vector(param['thresh'][:,nn], 10) for nn in range(param['N'])], axis=1)
-
-    with open(path_save +name+'.pk', 'wb') as f:
-                pickle.dump(param, f)
 
     # simulate 
     for cc in range(len(RSUM)):
@@ -252,7 +248,7 @@ def visualize_RD(name, par, sim_data, rsum, savefig, ampl_same):
     fig, axs = plt.subplots(1, 2, figsize=(4, 4))  # 1 row, 2 columns
 
     which_days = np.arange(sim_data['Tdays']) # np.array([0, 1, 10, 20])
-    # --- Fade-out ---
+    # Fade-out 
     ax = axs[0]
     sday0 = np.stack(par['signs'][0])
     for day in which_days[1:]:
@@ -268,7 +264,7 @@ def visualize_RD(name, par, sim_data, rsum, savefig, ampl_same):
     ax.spines['top'].set_visible(False);
     ax.spines['right'].set_visible(False);
 
-    # --- Fade-in ---
+    # Fade-in 
     ax = axs[1]
     sday0 = np.stack(par['signs'][0])
     for day in which_days[1:]:
@@ -285,7 +281,7 @@ def visualize_RD(name, par, sim_data, rsum, savefig, ampl_same):
     ax.spines['right'].set_visible(False);
 
     ######## SAME DAY ########
-    # --- Fade-out ---
+    # Fade-out
     ax = axs[0]
     sday0 = np.stack(par['signs'][0])[::2]
     sday1 = np.stack(par['signs'][0])[1::2]
@@ -293,7 +289,7 @@ def visualize_RD(name, par, sim_data, rsum, savefig, ampl_same):
     m, s = np.mean(perc), np.std(perc)
     ax.errorbar(0, m, yerr=s, color='k', fmt='o', capsize=0, label='day '+str(0))
 
-    # --- Fade-in ---
+    # Fade-in
     ax = axs[1]
     sday0 = np.stack(par['signs'][0])
     sday0 = np.stack(par['signs'][0])[::2]
@@ -329,8 +325,7 @@ def visualize_RD(name, par, sim_data, rsum, savefig, ampl_same):
         plt.plot([ii, ii], [ccs[ii]-ccse[ii], ccs[ii]+ccse[ii]], '-', color='k')
     plt.ylim(0.1, 0.8)
     plt.xticks(inddays)
-    # remove top and right spines
-    ax = plt.gca()  # get current axes
+    ax = plt.gca()  
     ax.spines['top'].set_visible(False);
     ax.spines['right'].set_visible(False);
     if savefig: plt.savefig(path_graph+'pop_rate_corr_'+name+'.pdf', bbox_inches='tight')
@@ -377,8 +372,7 @@ def visualize_RD(name, par, sim_data, rsum, savefig, ampl_same):
     plt.ylabel('Mean decoding accuracy')
     plt.title('Category decoding over time with '+str(Nperc*100)+'% neurons')
     plt.yticks(np.array([0.5, 0.6, 0.7, 0.8, 0.9, 1]));
-    # remove top and right spines
-    ax = plt.gca()  # get current axes
+    ax = plt.gca()  
     ax.spines['top'].set_visible(False);
     ax.spines['right'].set_visible(False);
     if savefig: plt.savefig(path_graph+'decoding_subsampled'+str(Nperc)+'_'+name+'.pdf', bbox_inches='tight')
